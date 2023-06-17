@@ -1,0 +1,193 @@
+<style>
+    
+       
+
+          *{
+            box-sizing: border-box;
+          }
+          
+          .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 90%;
+            max-width: 1000px;
+            margin: 50px auto;
+            box-shadow: 0 0 10px #ccc;
+            background-color: #fff;
+            padding: 30px 20px;
+            border-radius: 15px;
+          }
+
+          .container .heading{
+            text-align: center;
+            text-transform: capitalize;
+          }
+          
+          .upload-section {
+            width: 50%;
+            text-align: center;
+            padding: 20px;
+            overflow: hidden;
+          }
+          
+          .upload-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 300px;
+            cursor: pointer;
+            background-color: #f2f2f2;
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            margin: 20px 0;
+          }
+          
+          .upload-placeholder p {
+            margin: 10px 0;
+            font-size: 18px;
+            color: #ccc;
+          }
+          
+          #preview-image {
+            width: auto;
+            max-width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+          }
+          
+          .convert-section {
+            width: 50%;
+            text-align: center;
+            padding: 20px;
+          }
+          
+          .convert-button {
+            width: 100%;
+            height: 60px;
+            font-size: 18px;
+            margin: 20px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            background-color: #fff;
+            border: 1.5px solid #333;
+            color: #333;
+          }
+
+          .convert-button:hover{
+            background-color: #333;
+            color: #ffff;
+          }
+          
+          #download-link {
+            display: none;
+            width: 100%;
+            height: 60px;
+            font-size: 18px;
+            margin: 20px 0;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            line-height: 60px;
+            text-decoration: none;
+          }
+          
+          @media (max-width: 767px) {
+            .container {
+              flex-direction: column;
+            }
+            .upload-section,
+            .convert-section {
+              width: 100%;
+            }
+          }
+          
+          
+      
+</style>
+   
+
+        <div class="container">
+            <div class="upload-section">
+              <div class="upload-placeholder">
+                <img id="preview-image" src="https://via.placeholder.com/150" alt="Preview Image">
+                <input type="file" id="image-file" accept="image/*" style="display: none;">
+              </div>
+              <p>Upload or Drag and Drop the image.</p>
+            </div>
+            <div class="convert-section">
+              <button id="jpg-button" class="convert-button">Convert to JPG</button>
+              <button id="png-button" class="convert-button">Convert to PNG</button>
+              <button id="jpeg-button" class="convert-button">Convert to JPEG</button>
+              <button id="webp-button" class="convert-button">Convert to WebP</button>
+
+
+              <a id="download-link" style="display: none;">Download</a>
+            </div>
+          </div>
+          
+          
+          
+          <script>
+            const previewImage = document.querySelector("#preview-image");
+const imageFile = document.querySelector("#image-file");
+const uploadPlaceholder = document.querySelector(".upload-placeholder");
+const jpgButton = document.querySelector("#jpg-button");
+const pngButton = document.querySelector("#png-button");
+const jpegButton = document.querySelector("#jpeg-button");
+const webpButton = document.querySelector("#webp-button");
+
+const downloadLink = document.querySelector("#download-link");
+
+
+
+
+uploadPlaceholder.addEventListener("click", () => {
+  imageFile.click();
+});
+
+imageFile.addEventListener("change", () => {
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    previewImage.src = event.target.result;
+  };
+  reader.readAsDataURL(imageFile.files[0]);
+});
+
+jpgButton.addEventListener("click", () => {
+  convertImage("image/jpg");
+});
+
+pngButton.addEventListener("click", () => {
+  convertImage("image/png");
+});
+
+jpegButton.addEventListener("click", () => {
+  convertImage("image/jpeg");
+});
+
+webpButton.addEventListener("click", () => {
+  convertImage("image/webp");
+});
+
+function convertImage(type) {
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  const img = new Image();
+  img.src = previewImage.src;
+  canvas.width = img.width;
+  canvas.height = img.height;
+  ctx.drawImage(img, 0, 0);
+  downloadLink.href = canvas.toDataURL(type);
+  downloadLink.download = `converted-image.${type.split("/")[1]}`;
+  downloadLink.style.display = "block";
+  downloadLink.click();
+}
+
+
+
+          </script>
